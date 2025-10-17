@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiveDirectly - Programs</title>
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
+  body, html { background:#f4f4f4; color:#333; line-height:1.6; }
+
+  header {
+    background: #0d6d4f;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  }
+  header h1 { font-size: 22px; font-weight: 600; }
+  header a {
+    background: white;
+    color: #0d6d4f;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  header a:hover { background: #0a5a40; color: white; }
+
+  .container { max-width: 900px; margin: 30px auto; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+
+  h2 { color: #0d6d4f; margin-bottom: 10px; font-size: 22px; }
+  h3 { color: #0d6d4f; margin: 20px 0 10px; font-size: 18px; }
+  p { margin-bottom: 15px; font-size: 15px; }
+
+  .btn {
+    display: inline-block;
+    background: #0d6d4f;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 10px 0;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  .btn:hover { background: #0a5a40; }
+
+  ul { margin: 10px 0 20px 25px; }
+  ul li { margin-bottom: 10px; }
+
+  .step {
+    background: rgba(13,109,79,0.08);
+    border-left: 5px solid #0d6d4f;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+
+  footer {
+    background: #f0f0f0;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GiveDirectly Programs</h1>
+  <a id="donate-btn">Donate</a>
+</header>
+
+<div class="container">
+
+  <h2>Cash for Poverty Relief</h2>
+  <p><strong>GiveDirectly’s program delivering large, one-time transfers directly to households living in extreme poverty.</strong></p>
+
+  <a class="btn" id="give-now-top">Give Now</a>
+
+  <p>Every household in a village receives approximately <strong>$1,000</strong> with no strings attached.</p>
+
+  <p>Living below the extreme poverty line means a household is unable to afford their most basic needs of food, shelter, healthcare/sanitation, and education. $1,000 USD is about one year’s expenditure for the average household in poverty in the countries where we work. There is nothing magical about this amount – it reflects both existing evidence on the effectiveness of large transfers and it is roughly the amount the average family in poverty would need to invest in order to raise their income above that extreme poverty level.</p>
+
+  <h3>This program has delivered $220M+ since 2009</h3>
+  <p>As of February 2024, our poverty relief program is currently running in <strong>Kenya, Malawi, Mozambique, Rwanda, and Uganda</strong>. Since 2009, we’ve reached over <strong>440,000 households</strong> in rural villages across Africa through this program.</p>
+
+  <p>We’ve launched other cash transfer programs in <strong>Democratic Republic of the Congo, Nigeria, Morocco, Mozambique, and Togo.</strong></p>
+
+  <a class="btn" id="give-now-mid">Give Now</a>
+
+  <h3>We use a four-step payment process to deliver the funds</h3>
+
+  <div class="step">
+    <strong>1. Target</strong>
+    <p>We primarily use government data to target villages where most or all residents are living in extreme poverty, defined by the World Bank as earning under $2.15/day.</p>
+  </div>
+
+  <div class="step">
+    <strong>2. Enroll</strong>
+    <p>In-country GiveDirectly staff – not contractors – go door-to-door enrolling one member of each household in the entire village. They also hold large meetings to prepare the community for the coming transfers.</p>
+  </div>
+
+  <div class="step">
+    <strong>3. Pay</strong>
+    <p>About a month later, the funds are sent in two parts through a SMS-enabled banking technology called <strong>mobile money</strong>. If a household did not already have a mobile phone, we will give them one. They can then withdraw the mobile funds as cash with local agents.</p>
+  </div>
+
+  <div class="step">
+    <strong>4. Follow-up & Audit</strong>
+    <p>We then call each person to verify they received the funds and evaluate their experience with our program. We also provide toll-free call centers to offer support. Our internal audit team follows up with a subset of recipients to identify and investigate potential fraud.</p>
+  </div>
+
+  <h3>Research shows this money can be transformative</h3>
+  <p>People in poverty are experts on their own lives, and their own needs – what they are missing is money. These large one-time transfers allow them to invest in what they need most and have been shown to improve recipients’ earnings, children’s school attendance, health, nutrition, and mental wellbeing. The chart below summarizes the findings of dozens of studies of cash transfer programs all over the world.</p>
+
+  <h3>Send cash directly to people living in extreme poverty</h3>
+  <a class="btn" id="give-now-bottom">Give Now</a>
+
+</div>
+
+<footer>
+  &copy; 2025 GiveDirectly. All rights reserved.
+</footer>
+
+<script>
+  // Disable all links and buttons from redirecting
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', e => e.preventDefault());
+  });
+</script>
+
+</body>
+</html>

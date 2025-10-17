@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiveDirectly - Wallet</title>
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
+  body, html { background:#f4f4f4; color:#333; line-height:1.6; }
+
+  header {
+    background: #0d6d4f;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  }
+  header h1 { font-size: 22px; font-weight: 600; }
+  header a {
+    background: white;
+    color: #0d6d4f;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  header a:hover { background: #0a5a40; color: white; }
+
+  .container { max-width: 700px; margin: 30px auto; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+
+  h2 { color: #0d6d4f; margin-bottom: 15px; font-size: 22px; }
+  p { margin-bottom: 15px; font-size: 15px; }
+
+  .wallet-box {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  input {
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    background: #f4f4f4;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 14px;
+    background: #0d6d4f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  button:hover { background: #0a5a40; }
+
+  footer {
+    background: #f0f0f0;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #555;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GiveDirectly Wallet</h1>
+  <a id="back-btn">Back</a>
+</header>
+
+<div class="container">
+
+  <h2>Selected Donation</h2>
+  <p id="selected-donation">Please select a donation amount from the Programs page.</p>
+
+  <h2>Send your donation to the wallet below:</h2>
+
+  <div class="wallet-box">
+    <label for="wallet-address"><strong>Wallet Address</strong></label>
+    <input type="text" id="wallet-address" value="0x1477A277B9b043b69cC8c7cD01259d2845A80fb3" readonly>
+    <button id="copy-btn">Copy Wallet Address</button>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2025 GiveDirectly. All rights reserved.
+</footer>
+
+<script>
+  // Copy wallet address functionality
+  const copyBtn = document.getElementById('copy-btn');
+  const walletInput = document.getElementById('wallet-address');
+
+  copyBtn.addEventListener('click', () => {
+    walletInput.select();
+    walletInput.setSelectionRange(0, 99999); // mobile support
+    navigator.clipboard.writeText(walletInput.value).then(() => {
+      alert('Wallet address copied to clipboard!');
+    });
+  });
+
+  // Example: show donation selected from previous page
+  // If you want, this can be populated via localStorage or query params
+  const selectedDonation = localStorage.getItem('selectedDonation'); // e.g. "Give $100"
+  const donationDisplay = document.getElementById('selected-donation');
+  if (selectedDonation) {
+    donationDisplay.textContent = `You selected: ${selectedDonation}`;
+  }
+
+  // Back button (can go back in browser history)
+  document.getElementById('back-btn').addEventListener('click', () => {
+    history.back();
+  });
+</script>
+
+</body>
+</html>

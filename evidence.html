@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiveDirectly - Evidence</title>
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
+  body, html { background: #f4f4f4; color: #333; line-height:1.6; }
+
+  /* Header */
+  header {
+    background: #0d6d4f;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  }
+  header h1 { font-size: 22px; font-weight: 600; }
+  header a {
+    background: white;
+    color: #0d6d4f;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  header a:hover { background: #0a5a40; color: white; }
+
+  .container { max-width: 900px; margin: 30px auto; padding: 20px; }
+
+  /* Intro */
+  .intro { text-align: center; margin-bottom: 30px; }
+  .intro h2 { color: #0d6d4f; font-size: 24px; margin-bottom: 10px; }
+  .intro p { font-size: 16px; margin-bottom: 10px; }
+  .intro a { color: #0d6d4f; font-weight: 600; text-decoration: none; }
+  .intro a:hover { text-decoration: underline; }
+
+  /* Search */
+  .search-bar { display: flex; justify-content: center; margin: 20px 0; }
+  .search-bar input {
+    width: 80%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  .search-bar input:focus { outline: none; border-color: #0d6d4f; box-shadow: 0 0 5px rgba(13,109,79,0.3); }
+
+  /* Update card */
+  .update {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+    transition: 0.2s;
+  }
+  .update:hover { box-shadow: 0 5px 12px rgba(0,0,0,0.12); }
+  .update small { display: block; color: #555; font-size: 13px; margin-bottom: 6px; }
+  .update p { margin: 10px 0; line-height: 1.6; font-size: 15px; }
+  .update .meta { color: #666; font-size: 13px; margin-top: 10px; }
+  .update .meta a { color: #0d6d4f; text-decoration: none; font-weight: 500; }
+  .update .meta a:hover { text-decoration: underline; }
+
+  /* View more */
+  .view-more { text-align: center; margin: 30px 0; }
+  .view-more button {
+    background: #0d6d4f;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .view-more button:hover { background: #0a5a40; }
+
+  /* Footer */
+  footer { background: #f0f0f0; padding: 20px; text-align: center; font-size: 14px; color: #555; margin-top: 40px; }
+
+  @media (max-width:600px){
+    .search-bar input { width: 95%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GiveDirectly Evidence</h1>
+  <a href="https://donate.givedirectly.org/" target="_blank">Donate</a>
+</header>
+
+<div class="container">
+  <div class="intro">
+    <h2>LIVE UPDATES</h2>
+    <p>Unfiltered & unedited stories</p>
+    <p>Your donations transform lives. Browse real-time updates and stories from people who received cash. <a href="https://www.givedirectly.org/gdlive-story-collection/" target="_blank">See how it works</a></p>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Search stories...">
+  </div>
+
+  <!-- Live payments -->
+  <div class="update">
+    <small>Florida — 3 hours ago</small>
+    <p><strong>12 people received $182 each</strong></p>
+  </div>
+  <div class="update">
+    <small>California — 4 hours ago</small>
+    <p><strong>2 people received $6 each</strong></p>
+  </div>
+  <div class="update">
+    <small>New York — 7 hours ago</small>
+    <p><strong>1 person received $100</strong></p>
+  </div>
+
+  <div class="view-more">
+    <button>View More (All 120,351 stories)</button>
+  </div>
+
+  <!-- Recipient stories -->
+  <div class="update">
+    <p><strong>Photo omitted for recipient safety</strong></p>
+    <p>Since I started receiving the transfers, my daily income has improved. What I used to pay daily for the motorcycle loan, I can now use for other needs. The goat business is also supporting me well, complementing the motorcycle income and making my earnings more stable. My family is doing well, and I am now able to pay school fees without struggling, unlike before when it was very difficult. These changes have really eased my life and brought peace of mind.</p>
+    <div class="meta">Josphat in Florida — 1 week ago <a href="https://live.givedirectly.org/profile/0197f52a-c5f6-73a6-9e5c-673617b3aa42?p=2" target="_blank">Read more</a></div>
+  </div>
+
+  <div class="update">
+    <p><strong>Photo omitted for recipient safety</strong></p>
+    <p>Since I started receiving the transfer, my life has really improved. I can now pay school fees for my children and comfortably manage rent because my business profits have increased. I am also able to send a little money to support my mum, something I couldn’t do before. These changes have made my family happier and given me peace of mind.</p>
+    <div class="meta">Olivier in California — 2 weeks ago <a href="https://live.givedirectly.org/profile/0197f524-714f-7006-8f1f-e294cf250809?p=2" target="_blank">Read more</a></div>
+  </div>
+
+  <div class="update">
+    <p><strong>Photo omitted for recipient safety</strong></p>
+    <p>Since I improved my business, I have had to reach out to more clients because I have a variety of products now, thus increased income levels. This is the biggest difference in my life since receiving this money.</p>
+    <div class="meta">Munezero in New York — 2 weeks ago <a href="https://live.givedirectly.org/profile/0197f51e-d479-732e-908a-687701e7be3e?p=2" target="_blank">Read more</a></div>
+  </div>
+
+  <div class="update">
+    <p><strong>Photo omitted for recipient safety</strong></p>
+    <p>Taking care of my family has become a significant burden for me. I rely solely on casual jobs, and as I grow older, the physical toll of these construction jobs has taken a serious toll on my body. I am a mother of six children: four are in college, and two are in secondary school. Additionally, I live with my elderly mother, who is unable to care for herself and depends on me as well. Currently, my children have an outstanding school fee balance of $18,000, which adds to my stress. I hold onto the hope that once they finish college, they will find jobs to help support our household.</p>
+    <div class="meta">Zawadi in Texas — 2 weeks ago <a href="https://live.givedirectly.org/profile/019985cf-4e19-7161-99e6-488e5fc42eb0?p=2" target="_blank">Read more</a></div>
+  </div>
+
+  <div class="update">
+    <p><strong>Photo omitted for recipient safety</strong></p>
+    <p>Hand to mouth is the kind of life I am living with some days going the whole day without any meal. My husband and I do casual jobs, making approximately $150 per month. The money caters to food and school fees for the children. This is not enough. Thus, my six children have missed school this term for almost two weeks now due to the school fees balance of $60. I feel unhappy seeing my children at home while they are supposed to be at school. This program has come to make me achieve my desire to do commercial crop farming

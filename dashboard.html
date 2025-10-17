@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GiveDirect - Dashboard</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://i.ibb.co/FkHf7Rkr/pngtree-eagle-with-usa-flag-logo-png-image-15738685.png') center center / cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 20px;
+      position: relative;
+    }
+    .overlay {
+      position: fixed;
+      top:0; left:0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1;
+    }
+    .card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      width: 360px;
+      padding: 25px 20px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0,0,0,0.3);
+      margin: 10px 0;
+    }
+    h2 { margin-bottom: 15px; font-weight: 700; }
+    .balance-amount { font-size: 28px; font-weight: bold; margin-top: 10px; color: #ffd700; }
+    .info { text-align: left; margin: 10px 0; }
+    .info p { margin: 5px 0; font-size: 16px; }
+    .btn { width: 100%; padding: 12px; margin-top: 12px; border: none; border-radius: 30px; cursor: pointer; font-size: 16px; background-color: #0d6d4f; color: white; font-weight: bold; transition: all 0.3s ease; }
+    .btn:hover { background-color: #0a5a40; transform: scale(1.05); }
+    .btn-secondary { background-color: #007bff; margin-top: 10px; }
+    .btn-secondary:hover { background-color: #0056b3; transform: scale(1.05); }
+    .top-left-logout { position: fixed; top: 15px; left: 15px; background-color: #ff4d4d; font-size: 12px; padding: 8px 12px; border-radius: 8px; cursor: pointer; z-index: 3; font-weight: bold; color: white; border: none; }
+    .top-left-logout:hover { background-color: #cc0000; }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <!-- Logout button top-left -->
+  <button class="top-left-logout" id="logoutBtn">Log Out</button>
+
+  <!-- Balance Card -->
+  <div class="card">
+    <h2>Welcome, <span id="userName">User</span></h2>
+    <p>Your Requested Amount:</p>
+    <div class="balance-amount">$<span id="userAmount">0</span></div>
+  </div>
+
+  <!-- Application Details Card -->
+  <div class="card">
+    <h2>Application Details</h2>
+    <div class="info">
+      <p><strong>Email:</strong> <span id="userEmail"></span></p>
+      <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+      <p><strong>Account Type:</strong> <span id="userAccountType"></span></p>
+      <p><strong>Account Details:</strong> <span id="userAccountDetails"></span></p>
+      <p><strong>Status:</strong> <span id="userStatus"></span></p>
+      <p><strong>Applied Date:</strong> <span id="appliedDate">--/--/---- --:--</span></p>
+    </div>
+  </div>
+
+  <!-- Credit Info Card -->
+  <div class="card">
+    <h2>Credit Information</h2>
+    <p>Your account will be credited with the selected amount within 30 minutes (max 30 mins).</p>
+    <p>If your account is not credited within the stipulated time, please contact our customer service.</p>
+    <button class="btn btn-secondary" id="creditContactBtn">Contact Us</button>
+  </div>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGcWq1jffR3oPH8kmBce9f9ejxuGcNkUk",
+      authDomain: "earnad-1bd6b.firebaseapp.com",
+      projectId: "earnad-1bd6b",
+      storageBucket: "earnad-1bd6b.appspot.com",
+      messagingSenderId: "1025385905773",
+      appId: "1:1025385905773:web:794c70e0ed7bb36da00964",
+      measurementId: "G-3R1NHDHJR7"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const userNameEl = document.getElementById('userName');
+    const userEmailEl = document.getElementById('userEmail');
+    const userPhoneEl = document.getElementById('userPhone');
+    const userAccountTypeEl = document.getElementById('userAccountType');
+    const userAccountDetailsEl = document.getElementById('userAccountDetails');
+    const userAmountEl = document.getElementById('userAmount');
+    const userStatusEl = document.getElementById('userStatus');
+    const appliedDateEl = document.getElementById('appliedDate');
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const uid = user.uid;
+      try {
+        const doc = await db.collection('applications').doc(uid).get();
+        if (doc.exists) {
+          const data = doc.data();
+          userNameEl.textContent = data.fullName || 'User';
+          userEmailEl.textContent = data.email || '';
+          userPhoneEl.textContent = data.phone || '';
+          userAccountTypeEl.textContent = data.accountType || '';
+          userAccountDetailsEl.textContent = data.accountDetails || '';
+          userAmountEl.textContent = data.amountNeeded || '0';
+          
+          // ✅ Fixed: show pending until admin changes it
+          userStatusEl.textContent = data.status || 'Pending Review';
+
+          // --- Always show applied date ---
+          let appliedDate;
+          if (data.timestamp && data.timestamp.toDate) {
+            appliedDate = data.timestamp.toDate();
+          } else if (user.metadata && user.metadata.creationTime) {
+            appliedDate = new Date(user.metadata.creationTime);
+          } else {
+            appliedDate = new Date();
+          }
+
+          appliedDateEl.textContent =
+            appliedDate.toLocaleDateString() + ' ' + appliedDate.toLocaleTimeString();
+
+        } else {
+          const fallbackDate = user.metadata?.creationTime
+            ? new Date(user.metadata.creationTime)
+            : new Date();
+          appliedDateEl.textContent =
+            fallbackDate.toLocaleDateString() + ' ' + fallbackDate.toLocaleTimeString();
+          alert('No application data found.');
+        }
+      } catch (err) {
+        console.error(err);
+        const now = new Date();
+        appliedDateEl.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'index.html');
+    });
+
+    document.getElementById('creditContactBtn').addEventListener('click', () => {
+      window.open('https://wa.me/2250100835285', '_blank');
+    });
+  </script>
+</body>
+</html>

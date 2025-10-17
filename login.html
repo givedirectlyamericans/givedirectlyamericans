@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GiveDirect - Login</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://i.ibb.co/FkHf7Rkr/pngtree-eagle-with-usa-flag-logo-png-image-15738685.png') center center / cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 340px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      background-color: #0d6d4f;
+      color: white;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0a5a40;
+      transform: scale(1.05);
+    }
+
+    .small-text {
+      margin-top: 15px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .small-text a {
+      color: #ffd700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="card">
+    <h2>Welcome Back</h2>
+    <p>Login to your GiveDirect account</p>
+
+    <input type="email" id="email" placeholder="Email Address" required />
+    <input type="password" id="password" placeholder="Password" required />
+
+    <button class="btn" id="loginBtn">Login</button>
+
+    <div class="small-text">
+      Don’t have an account? <a href="apply.html">Apply Here</a>
+    </div>
+  </div>
+
+  <script>
+    // Firebase configuration (same as your application page)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGcWq1jffR3oPH8kmBce9f9ejxuGcNkUk",
+      authDomain: "earnad-1bd6b.firebaseapp.com",
+      projectId: "earnad-1bd6b",
+      storageBucket: "earnad-1bd6b.appspot.com",
+      messagingSenderId: "1025385905773",
+      appId: "1:1025385905773:web:794c70e0ed7bb36da00964",
+      measurementId: "G-3R1NHDHJR7"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Login logic
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        alert("Please enter your email and password.");
+        return;
+      }
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        alert("Login successful!");
+        // Redirect to dashboard after login
+        window.location.href = "dashboard.html";
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GiveDirect - Donate</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  body, html {
+    height: 100%;
+    background: url('https://i.ibb.co/FkHf7Rkr/pngtree-eagle-with-usa-flag-logo-png-image-15738685.png') center center / cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+  }
+
+  .donation-container {
+    position: relative;
+    z-index: 2;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 30px 25px;
+    border-radius: 15px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  h1 { font-size: 2rem; margin-bottom: 8px; }
+  p.subtitle { font-size: 1rem; color: #f2f2f2; margin-bottom: 25px; }
+
+  .toggle-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+  .toggle-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+  }
+  .toggle-btn.active { background: white; color: #0d6d4f; border-color: #0d6d4f; }
+
+  .amount-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
+  .amount-btn {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 2px solid transparent;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  .amount-btn.active { background: white; color: #0d6d4f; border-color: #0d6d4f; }
+
+  .give-display {
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .btn-give {
+    display: inline-block;
+    background-color: #0d6d4f;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .btn-give:hover { background-color: #0a5a40; }
+
+  .extra-info { margin-top: 30px; text-align: center; }
+  .extra-info h3 { margin-bottom: 10px; font-size: 1.2rem; }
+  .btn-contact {
+    margin-top: 10px;
+    display: inline-block;
+    background: white;
+    color: #0d6d4f;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+  .btn-contact:hover { background: #f0f0f0; }
+</style>
+</head>
+<body>
+<div class="overlay"></div>
+
+<div class="donation-container">
+  <h1>GiveDirect</h1>
+  <p class="subtitle">Send money directly to people in need</p>
+
+  <div class="toggle-group">
+    <div class="toggle-btn active" onclick="selectType('once', this)">Give Once</div>
+    <div class="toggle-btn" onclick="selectType('monthly', this)">Give Monthly</div>
+  </div>
+
+  <div class="amount-group">
+    <div class="amount-btn" onclick="selectAmount(20, this)">$20</div>
+    <div class="amount-btn" onclick="selectAmount(50, this)">$50</div>
+    <div class="amount-btn" onclick="selectAmount(100, this)">$100</div>
+    <div class="amount-btn" onclick="selectAmount(150, this)">$150</div>
+    <div class="amount-btn" onclick="selectAmount(200, this)">$200</div>
+  </div>
+
+  <div class="give-display" id="giveDisplay">Give $0 once</div>
+
+  <button class="btn-give" id="giveNowBtn">Give Now</button>
+
+  <div class="extra-info">
+    <h3>Additional Info</h3>
+    <a href="https://wa.me/2250100835285" target="_blank" class="btn-contact">Contact Us</a>
+  </div>
+</div>
+
+<script>
+  let selectedType = 'once';
+  let selectedAmount = 0;
+
+  function selectType(type, element) {
+    selectedType = type;
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+    element.classList.add('active');
+    updateDisplay();
+  }
+
+  function selectAmount(amount, element) {
+    selectedAmount = amount;
+    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+    element.classList.add('active');
+    updateDisplay();
+  }
+
+  function updateDisplay() {
+    document.getElementById('giveDisplay').textContent =
+      `Give $${selectedAmount} ${selectedType}`;
+  }
+
+  document.getElementById('giveNowBtn').addEventListener('click', function() {
+    if (selectedAmount === 0) {
+      alert('Please select an amount before giving.');
+      return;
+    }
+    // Save selection to localStorage to pass to wallet page
+    localStorage.setItem('selectedDonation', `$${selectedAmount} ${selectedType}`);
+    // Redirect to wallet page
+    window.location.href = 'wallet.html';
+  });
+</script>
+</body>
+</html>

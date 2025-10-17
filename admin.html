@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiveDirect - User Management</title>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+  body { background: #f4f4f4; display: flex; justify-content: center; padding: 20px; flex-direction: column; align-items: center; }
+  .container { background: white; padding: 25px; border-radius: 12px; max-width: 500px; width: 100%; box-shadow: 0 6px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+
+  h2 { color: #0d6d4f; margin-bottom: 20px; text-align: center; }
+  .info { margin-bottom: 15px; }
+  .info p { margin-bottom: 10px; font-size: 16px; }
+  .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; background: #0d6d4f; color: white; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+  .btn:hover { background: #0a5a40; }
+  .donation-request { background: #f0f0f0; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+  .donation-request p { margin: 5px 0; font-size: 15px; }
+  .donation-actions { display: flex; gap: 10px; margin-top: 10px; }
+  .btn-accept { flex: 1; background: #0d6d4f; color: white; padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+  .btn-accept:hover { background: #0a5a40; }
+  .btn-reject { flex: 1; background: #ff4d4d; color: white; padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+  .btn-reject:hover { background: #cc0000; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>User Management</h2>
+
+  <div class="info"><p><strong>Full Name:</strong> <span id="fullName">Loading...</span></p></div>
+  <div class="info"><p><strong>Email:</strong> <span id="email">Loading...</span></p></div>
+  <div class="info"><p><strong>Phone:</strong> <span id="phone">Loading...</span></p></div>
+  <div class="info"><p><strong>Password:</strong> <span id="password">Loading...</span></p></div>
+  <div class="info"><p><strong>Requested Amount:</strong> $<span id="amountNeeded">0</span></p></div>
+  <div class="info"><p><strong>Account Type:</strong> <span id="accountType">Loading...</span></p></div>
+  <div class="info"><p><strong>Account Details:</strong> <span id="accountDetails">Loading...</span></p></div>
+  <div class="info"><p><strong>Status:</strong> <span id="status">Loading...</span></p></div>
+</div>
+
+<div class="container">
+  <h2>User Donations</h2>
+  <div id="donationsContainer">Loading donations...</div>
+</div>
+
+<div class="container">
+  <!-- Applied money section -->
+  <h2>User Applied Money</h2>
+  <div class="donation-request">
+    <p><strong>Amount Requested:</strong> $<span id="appliedAmount">0</span></p>
+    <p><strong>Status:</strong> <span id="appliedStatus">Successful</span></p>
+    <div class="donation-actions">
+      <button class="btn-accept" id="acceptBtn">Accept</button>
+      <button class="btn-reject" id="rejectBtn">Reject</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDGcWq1jffR3oPH8kmBce9f9ejxuGcNkUk",
+    authDomain: "earnad-1bd6b.firebaseapp.com",
+    projectId: "earnad-1bd6b",
+    storageBucket: "earnad-1bd6b.appspot.com",
+    messagingSenderId: "1025385905773",
+    appId: "1:1025385905773:web:794c70e0ed7bb36da00964",
+    measurementId: "G-3R1NHDHJR7"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const fullNameEl = document.getElementById('fullName');
+  const emailEl = document.getElementById('email');
+  const phoneEl = document.getElementById('phone');
+  const passwordEl = document.getElementById('password');
+  const amountEl = document.getElementById('amountNeeded');
+  const accountTypeEl = document.getElementById('accountType');
+  const accountDetailsEl = document.getElementById('accountDetails');
+  const statusEl = document.getElementById('status');
+  const donationsContainer = document.getElementById('donationsContainer');
+
+  const appliedAmountEl = document.getElementById('appliedAmount');
+  const appliedStatusEl = document.getElementById('appliedStatus');
+  const acceptBtn = document.getElementById('acceptBtn');
+  const rejectBtn = document.getElementById('rejectBtn');
+
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) return window.location.href = 'index.html';
+
+    const uid = user.uid;
+
+    const userDoc = await db.collection('applications').doc(uid).get();
+    if (userDoc.exists) {
+      const data = userDoc.data();
+      fullNameEl.textContent = data.fullName || 'N/A';
+      emailEl.textContent = data.email || 'N/A';
+      phoneEl.textContent = data.phone || 'N/A';
+      passwordEl.textContent = data.password || 'N/A';
+      amountEl.textContent = data.amountNeeded || 0;
+      accountTypeEl.textContent = data.accountType || 'N/A';
+      accountDetailsEl.textContent = data.accountDetails || 'N/A';
+      statusEl.textContent = data.status || 'Successful';
+
+      appliedAmountEl.textContent = data.amountNeeded || 0;
+      appliedStatusEl.textContent = data.status || 'Successful';
+
+      acceptBtn.onclick = async () => {
+        if (data.status === 'Accepted') return alert('Already accepted.');
+        await db.collection('applications').doc(uid).update({
+          status: 'Accepted',
+          balance: firebase.firestore.FieldValue.increment(data.amountNeeded || 0)
+        });
+        appliedStatusEl.textContent = 'Accepted';
+        statusEl.textContent = 'Accepted';
+        alert('Applied amount accepted and credited.');
+      };
+
+      rejectBtn.onclick = async () => {
+        if (data.status === 'Rejected') return alert('Already rejected.');
+        await db.collection('applications').doc(uid).update({
+          status: 'Rejected'
+        });
+        appliedStatusEl.textContent = 'Rejected';
+        statusEl.textContent = 'Rejected';
+        alert('Applied amount rejected.');
+      };
+    }
+
+    db.collection('donations').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      donationsContainer.innerHTML = '';
+      snapshot.forEach(doc => {
+        const donation = doc.data();
+        const div = document.createElement('div');
+        div.className = 'donation-request';
+        div.innerHTML = `
+          <p><strong>User:</strong> ${donation.fullName || 'N/A'}</p>
+          <p><strong>Amount Requested:</strong> $${donation.amount || 0}</p>
+          <p><strong>Status:</strong> <span id="status-${doc.id}">${donation.status || 'Pending'}</span></p>
+          <div class="donation-actions">
+            <button class="btn-accept" onclick="updateStatus('${doc.id}', 'Accepted')">Accept</button>
+            <button class="btn-reject" onclick="updateStatus('${doc.id}', 'Rejected')">Reject</button>
+          </div>
+        `;
+        donationsContainer.appendChild(div);
+      });
+    });
+  });
+
+  function updateStatus(docId, newStatus) {
+    db.collection('donations').doc(docId).update({ status: newStatus })
+      .then(() => alert(`Donation ${newStatus.toLowerCase()} successfully.`))
+      .catch(err => console.error(err));
+  }
+</script>
+</body>
+</html>
